@@ -155,6 +155,9 @@ class CartSafeEnv(gym.Env):
                 # or theta > self.theta_threshold_radians
         done = bool(done)
 
+        truncated = x < -self.x_threshold \
+                or x > self.x_threshold
+
         if not done:
             reward = 1+np.math.cos(theta)
         elif self.steps_beyond_done is None:
@@ -169,7 +172,7 @@ class CartSafeEnv(gym.Env):
 
         constraint_costs = self.constraint_cost(x, x_dot)
 
-        return np.array(self.state), reward, done, {'constraint_costs': constraint_costs}
+        return np.array(self.state), reward, done, truncated, {'constraint_costs': constraint_costs}
 
 
 
